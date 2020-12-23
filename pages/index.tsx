@@ -20,16 +20,12 @@ export default function Home({ file }) {
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>Usman Haider</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
         <h1 className="title">
-          {/**
-           * Render the title from `home.json`
-           */}
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
           {data.title}
         </h1>
 
