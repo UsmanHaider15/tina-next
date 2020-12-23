@@ -29,8 +29,8 @@ export default function Home({ file }) {
           {/**
            * Render the title from `home.json`
            */}
--          Welcome to <a href="https://nextjs.org">Next.js!</a>
-+          {data.title}
+          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          {data.title}
         </h1>
 
         
