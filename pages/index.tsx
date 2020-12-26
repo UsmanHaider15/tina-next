@@ -1,22 +1,26 @@
-import Head from 'next/head'
+import Head from "next/head";
 /**
  * Import helpers and GetStaticProps type
  */
- import { getGithubPreviewProps, parseJson } from 'next-tinacms-github'
- import { GetStaticProps } from 'next'
+import { getGithubPreviewProps, parseJson } from "next-tinacms-github";
+import { GetStaticProps } from "next";
 
- import { usePlugin } from 'tinacms'
- import { useGithubJsonForm, useGithubToolbarPlugins } from 'react-tinacms-github'
+import { usePlugin } from "tinacms";
+import {
+  useGithubJsonForm,
+  useGithubToolbarPlugins,
+} from "react-tinacms-github";
+import { InlineForm, InlineText } from "react-tinacms-inline";
 
 export default function Home({ file }) {
   const formOptions = {
-      label: 'Home Page',
-      fields: [{ name: 'title', component: 'text' }],
-    }
-      // Registers a JSON Tina Form
-  const [data, form] = useGithubJsonForm(file, formOptions)
-  usePlugin(form)
-  useGithubToolbarPlugins()
+    label: "Home Page",
+    fields: [{ name: "title", component: "text" }],
+  };
+  // Registers a JSON Tina Form
+  const [data, form] = useGithubJsonForm(file, formOptions);
+  usePlugin(form);
+  useGithubToolbarPlugins();
   return (
     <div className="container">
       <Head>
@@ -24,34 +28,28 @@ export default function Home({ file }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <h1 className="title">
-          {data.title}
+      <InlineForm form={form}>
+        <h1>
+          <InlineText name="title" />
         </h1>
-
-        
-
-      </main>
-
-      
-
+      </InlineForm>
     </div>
-  )
+  );
 }
 
 /**
  * Fetch data with getStaticProps based on 'preview' mode
  */
-export const getStaticProps: GetStaticProps = async function({
+export const getStaticProps: GetStaticProps = async function ({
   preview,
- previewData,
+  previewData,
 }) {
- if (preview) {
-   return getGithubPreviewProps({
-     ...previewData,
-      fileRelativePath: 'content/home.json',
+  if (preview) {
+    return getGithubPreviewProps({
+      ...previewData,
+      fileRelativePath: "content/home.json",
       parse: parseJson,
-   })
+    });
   }
   return {
     props: {
@@ -59,10 +57,9 @@ export const getStaticProps: GetStaticProps = async function({
       error: null,
       preview: false,
       file: {
-       fileRelativePath: 'content/home.json',
-        data: (await import('../content/home.json')).default,
+        fileRelativePath: "content/home.json",
+        data: (await import("../content/home.json")).default,
       },
     },
- }
-}
- 
+  };
+};
