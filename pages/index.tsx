@@ -14,13 +14,14 @@ import {
 import { InlineForm, InlineText } from "react-tinacms-inline";
 import Link from "next/link";
 
-export default function Home({ file }) {
+export default function Home(props) {
   const formOptions = {
     label: "Home Page",
     fields: [{ name: "title", component: "text" }],
   };
+
   // Registers a JSON Tina Form
-  const [data, form] = useGithubJsonForm(file, formOptions);
+  const [data, form] = useGithubJsonForm(props.file, formOptions);
   usePlugin(form);
   useGithubToolbarPlugins();
   return (
@@ -36,7 +37,7 @@ export default function Home({ file }) {
         </h1>
       </InlineForm>
       <div>
-        {file.allPosts.map((post) => (
+        {props.file.allPosts.map((post) => (
           <p key={post.data.title}>
             <Link href={"/posts/" + post.slug}>
               <a>{post.data.title}</a>
@@ -57,12 +58,23 @@ export const getStaticProps: GetStaticProps = async function ({
 }) {
   const allPosts = await getAllPosts();
 
+  console.log("preview", preview);
+  console.log("previewData", previewData);
   if (preview) {
-    return getGithubPreviewProps({
+    const props = await getGithubPreviewProps({
       ...previewData,
       fileRelativePath: "content/home.json",
       parse: parseJson,
     });
+    return {
+      props: {
+        ...props.props,
+        file: {
+          ...props.props.file,
+          allPosts,
+        },
+      },
+    };
   }
   return {
     props: {
@@ -72,7 +84,7 @@ export const getStaticProps: GetStaticProps = async function ({
       file: {
         fileRelativePath: "content/home.json",
         data: (await import("../content/home.json")).default,
-        allPosts: allPosts,
+        allPosts,
       },
     },
   };
