@@ -1,4 +1,5 @@
 import Head from "next/head";
+import getAllPosts from "./api/index";
 /**
  * Import helpers and GetStaticProps type
  */
@@ -11,6 +12,7 @@ import {
   useGithubToolbarPlugins,
 } from "react-tinacms-github";
 import { InlineForm, InlineText } from "react-tinacms-inline";
+import Link from "next/link";
 
 export default function Home({ file }) {
   const formOptions = {
@@ -33,6 +35,15 @@ export default function Home({ file }) {
           <InlineText name="title" />
         </h1>
       </InlineForm>
+      <div>
+        {file.allPosts.map((post) => (
+          <p key={post.data.title}>
+            <Link href={"/posts/" + post.slug}>
+              <a>{post.data.title}</a>
+            </Link>
+          </p>
+        ))}
+      </div>
     </div>
   );
 }
@@ -44,6 +55,8 @@ export const getStaticProps: GetStaticProps = async function ({
   preview,
   previewData,
 }) {
+  const allPosts = await getAllPosts();
+
   if (preview) {
     return getGithubPreviewProps({
       ...previewData,
@@ -59,6 +72,7 @@ export const getStaticProps: GetStaticProps = async function ({
       file: {
         fileRelativePath: "content/home.json",
         data: (await import("../content/home.json")).default,
+        allPosts: allPosts,
       },
     },
   };
